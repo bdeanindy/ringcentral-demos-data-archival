@@ -1,36 +1,111 @@
-.chapter(data-title='Your New Viewsaurus Tutorial')
+.chapter(data-title='Data Archival with RingCentral Tutorial')
   .step(data-title='Welcome!', data-file='tutorial/config.json')
-    h2 Welcome to Viewsaurus
-
-    p Thanks for writing a Viewsaurus tutorial! If you're new to Viewsaurus, feel free to click through this brief tutorial showing you how a Viewsaurus tutorial is structured.
-
-    p The tutorial's navigation controls are located above this text. Use <i class="fa fa-fw fa-play"></i> to move to the next step of the tutorial. Use <i class="fa fa-fw fa-play fa-rotate-180"></i> to move to the previous step of the tutorial (if there is one). Use <i class="fa fa-fw fa-list"></i> to see an overview of all the steps in the tutorial.
-
-    p Let's begin by walking through the files generated for you in the `tutorial` directory with the `saurus new` command - those files are actually what is being used to show you this tutorial right now!
-
-  .step(data-title='Tutorial Configuration', data-file='tutorial/config.json')
     :markdown
-      ## Configuration
+        ## Welcome to the Data Archival with RingCentral Tutorial
 
-      The first file we'll look at is `config.json`. This contains high-level configuration information about your tutorial. This JSON file contains several properties you can declare about your tutorial:
+        Data Archival provides developers the capability to store RingCentral Activity data via the API into their data persistence layer of choice, in this tutorial we will cover using PHP to offload RingCentral Activity data into either Amazon S3, or Dropbox.
 
-      * `title`: This is the title of your tutorial which will show on the first page
-      * `description`: This is a string of text that will appear above the "Start" button for your tutorial.
-      * `repo`: This is the GitHub repo that your code lives in. Right now we assume all projects are hosted there, but we'll likely make this agnostic in the future.
-      * `heroku`: This indicates whether or not your project supports instant deployment with the [Heroku Button](https://blog.heroku.com/archives/2014/8/7/heroku-button)
+        ### Most common use cases for data archival
 
-      Now, let's take a look at the first file that contains the actual content of the tutorial, `index.jade`.
+        * Preventing High-Volume Data Loss
+        * Long Term Data Retention
+        * Analysis and Reporting
+        * Legal Data Storage Requirements (SEC)
+        * Business Process Improvements and Training
+        * Call Sentiment Analysis and Predictive Analytics
 
-  .step(data-title='Step Two')
-    h2 Under Construction
+  .step(data-title='Data Retention Policy', data-file='tutorial/data-retention-example.md')
+    :markdown
+      ## Data Retention Policy
 
-    p more tutorial to come.
+      It is critical for developers to know that RingCentral does not store RingCentral Activity data indefinitely. The RingCentral Data Retention Policy stores data differently depending upon:
 
-  //- Example: include markdown file
-    .step(data-title='Step Three', data-file='', data-highlight='')
-      include:markdown three.md
+      * **Account Type**
+        * HIPAA
+        * Non-HIPAA
+      * **Data Type**
+        * Fax Attachments
+        * SMS Messages
+        * Call Logs
+        * Call Recordings
+        * Voice Mail
+        * etc...
 
-  //- Example: include jade file (don't need file extension)
-    .step(data-title='Step Four', data-file='', data-highlight='')
-      include four
+      Developers are highly encouraged to [read the official RingCentral Data Retention Policy](https://success.ringcentral.com/articles/en_US/RC_Knowledge_Article/2178#1) for the most current specifications and to understand how it impacts your data archival solution requirements.
+
+  .step(data-title='API Resources for Data Archiving')
+    :markdown
+        ## API Resources for Data Archiving
+
+        We will be using a variety of RingCentral API Resources in this tutorial, and we wanted to list the primary API resources for your RingCentral Activity data:
+
+        * [Voicemail, Fax Attachments, SMS Messages](https://developer.ringcentral.com/api-docs/latest/index.html#!#Messages.html)
+        * [Call Log](https://developer.ringcentral.com/api-docs/latest/index.html#!#RefCallLogInfo.html)
+        * [Call Recordings](https://developer.ringcentral.com/api-docs/latest/index.html#!#RefCallRecording.html)
+
+  .step(data-title='Product Resources for Data Archiving')
+    :markdown
+        ## Product Resources for Data Archving
+
+        To be thorough (even though we will not use them in this tutorial), here is a list of non-API resources to access RingCentral Activity data:
+
+        * [Activity Log Overview](https://success.ringcentral.com/articles/RC_Knowledge_Article/Activity-Log-Overview)
+        * [Phone System Reports](https://www.ringcentral.com/office/features/call-metrics-reporting/overview.html)
+        * [Download Your Call Log](https://success.ringcentral.com/articles/RC_Knowledge_Article/Activity-Log-Overview#downloading)
+
+  .step(data-title='Prerequisites', data-file='README.md', data-highlight='7-18')
+    :markdown
+        ## Prerequisites 
+
+        Before you can follow along with this tutorial, you must have a web server with PHP installed with the appropriate version, dependencies, and modules/extensions as indicated in the [README.md](https://github.com/bdeanindy/ringcentral-demos-data-archival#requirements).
+
+        **App Configuration Specs (minimum)**
+
+        * Scope: **Private**
+        * Application Type: **Server Only (NO UI)**
+        * API Permission: **ReadCallRecording**
+
+  .step(data-title='Installation', data-file='README.md', data-highlight='25-38')
+    :markdown
+        ## Installation
+
+        Please follow the directions in the [Clone the Repository](https://github.com/bdeanindy/ringcentral-demos-data-archival#clone-the-repository--recommended-).
+
+  .step(data-title='Configuration', data-file='README.md', data-highlight='42-67')
+    :markdown
+        ## Configuration
+
+        * `mv .env.example .env` to rename the file `.env.example` to `.env` which is the environment variable file we use in this tutorial for local operation.
+        * Populate the values in the newly renamed `.env` file
+            * RC_dateFrom: Used to define the start date of data timestamps(in ISO8601 format) to retrieve
+            * RC_dateTo: Used to define the end date of data timestamps(in ISO8601 format) to retrieve
+            * RC_AppKey: Your RingCentral app's `Application Key`
+            * RC_AppSecret: Your RingCentral app's `Application Secret`
+            * RC_Server: RingCentral Base API URI (https://platform[.devtest].ringcentral.com)
+            * RC_Username: Your RingCentral Administrator username (environment sensitive)
+            * RC_Password: Your RingCentral Administrator password (environment sensitive)
+            * RC_fromPhoneNumber: 
+            * RC_toPhoneNumber:
+            * RC_callRecordingsCount: 
+            * amazonAccessKey:
+            * amazonSecretKey:
+            * dropBoxkey:
+            * dropBoxsecret:
+            * RC_SkipCallLog:
+            * RC_SkipRingOut:
+            * RC_SkipDownload:
+            * RC_SkipDownloadS3:
+            * RC_SkipDownloadDropbox:
+
+  .step(data-title='Starting the App', data-file='README.md', data-highlight='70-75')
+    :markdown
+        ## Starting the App
+
+        To begin running this script, run `$ php index.php`.
+
+  .step(data-title='Usage - Retrieve Call Logs', data-file='README.md', data-highlight='78-86')
+    :markdown
+        ## Usage - Retrieve Call Logs
+
+        TODO!!!!!!!
 
