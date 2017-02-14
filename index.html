@@ -53,14 +53,46 @@
 <li><a href="https://www.ringcentral.com/office/features/call-metrics-reporting/overview.html">Phone System Reports</a></li>
 <li><a href="https://success.ringcentral.com/articles/RC_Knowledge_Article/Activity-Log-Overview#downloading">Download Your Call Log</a></li>
 </ul>
-</div><div data-title="Prerequisites" data-file="README.md" class="step"><h2 id="prerequisites">Prerequisites</h2>
+</div><div data-title="Prerequisites" data-file="README.md" data-highlight="7-18" class="step"><h2 id="prerequisites">Prerequisites</h2>
 <p>Before you can follow along with this tutorial, you must have a web server with PHP installed with the appropriate version, dependencies, and modules/extensions as indicated in the <a href="https://github.com/bdeanindy/ringcentral-demos-data-archival#requirements">README.md</a>.</p>
-<h2 id="ringcentral-application-specs">RingCentral Application Specs</h2>
+<p><strong>App Configuration Specs (minimum)</strong></p>
 <ul>
 <li>Scope: <strong>Private</strong></li>
 <li>Application Type: <strong>Server Only (NO UI)</strong></li>
 <li>API Permission: <strong>ReadCallRecording</strong></li>
 </ul>
+</div><div data-title="Installation" data-file="README.md" data-highlight="25-38" class="step"><h2 id="installation">Installation</h2>
+<p>Please follow the directions in the <a href="https://github.com/bdeanindy/ringcentral-demos-data-archival#clone-the-repository--recommended-">Clone the Repository</a>.</p>
+</div><div data-title="Configuration" data-file="README.md" data-highlight="42-67" class="step"><h2 id="configuration">Configuration</h2>
+<ul>
+<li><code>mv .env.example .env</code> to rename the file <code>.env.example</code> to <code>.env</code> which is the environment variable file we use in this tutorial for local operation.</li>
+<li>Populate the values in the newly renamed <code>.env</code> file<ul>
+<li>RC_dateFrom: Used to define the start date of data timestamps(in ISO8601 format) to retrieve</li>
+<li>RC_dateTo: Used to define the end date of data timestamps(in ISO8601 format) to retrieve</li>
+<li>RC_AppKey: Your RingCentral app&#39;s <code>Application Key</code></li>
+<li>RC_AppSecret: Your RingCentral app&#39;s <code>Application Secret</code></li>
+<li>RC_Server: RingCentral Base API URI (<a href="https://platform[.devtest].ringcentral.com">https://platform[.devtest].ringcentral.com</a>)</li>
+<li>RC_Username: Your RingCentral Administrator username (environment sensitive)</li>
+<li>RC_Password: Your RingCentral Administrator password (environment sensitive)</li>
+<li>RC_fromPhoneNumber: </li>
+<li>RC_toPhoneNumber:</li>
+<li>RC_callRecordingsCount: </li>
+<li>amazonAccessKey:</li>
+<li>amazonSecretKey:</li>
+<li>dropBoxkey:</li>
+<li>dropBoxsecret:</li>
+<li>RC_SkipCallLog:</li>
+<li>RC_SkipRingOut:</li>
+<li>RC_SkipDownload:</li>
+<li>RC_SkipDownloadS3:</li>
+<li>RC_SkipDownloadDropbox:</li>
+</ul>
+</li>
+</ul>
+</div><div data-title="Starting the App" data-file="README.md" data-highlight="70-75" class="step"><h2 id="starting-the-app">Starting the App</h2>
+<p>To begin running this script, run <code>$ php index.php</code>.</p>
+</div><div data-title="Usage - Retrieve Call Logs" data-file="README.md" data-highlight="78-86" class="step"><h2 id="usage-retrieve-call-logs">Usage - Retrieve Call Logs</h2>
+<p>TODO!!!!!!!</p>
 </div></div>
 <div class="saurus-files" style="display:none;"><textarea class="saurus-file" data-file="tutorial/config.json" data-mode="json">ewogICAgInRpdGxlIjogIkRhdGEgQXJjaGl2YWwgd2l0aCBSaW5nQ2VudHJhbCIsCiAgICAicmVwbyI6ICJiZGVhbmluZHkvcmluZ2NlbnRyYWwtZGVtb3MtZGF0YS1hcmNoaXZhbCIsCiAgICAiZGVzY3JpcHRpb24iOiAiVGhpcyB0dXRvcmlhbCB3aWxsIHNob3cgZGV2ZWxvcGVycyB0aGUgYmFzaWNzIG9mIGFyY2hpdmluZyB5b3VyIFJpbmdDZW50cmFsIERhdGEuIENsaWNrIHRoZSBcIlN0YXJ0XCIgYnV0dG9uIGJlbG93IHRvIGJlZ2luLiIsCiAgICAiaGVyb2t1IjogZmFsc2UKfQo=</textarea>
 <textarea class="saurus-file" data-file="tutorial/data-retention-example.md" data-mode="markdown">IyMgRk9MTE9XSU5HIElTIEFOIEVYQU1QTEUgT05MWQoKT2ZmaWNpYWwgVVJJOiBodHRwczovL3N1Y2Nlc3MucmluZ2NlbnRyYWwuY29tL2FydGljbGVzL2VuX1VTL1JDX0tub3dsZWRnZV9BcnRpY2xlLzIxNzgjMQoKIyMgRGF0YSBCYWNrdXAgT3B0aW9ucyBpbiBSaW5nQ2VudHJhbCBPbmxpbmUgQWNjb3VudCAobm90IHVzaW5nIHRoZSBSaW5nQ2VudHJhbCBBUEksIGJ1dCB0aGUgT25saW5lIFBvcnRhbCkKCnwgRmVhdHVyZSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgTm9uLUhJUEFBIEFjY291bnRzICAgICAgICAgICAgICAgIHwgSElQQUEgQWNjb3VudHMgICAgICAgIHwgCnwtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLXwtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLXwtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLXwKfCBFbWFpbCAvIEZheCBNZXNzYWdlcyAoRG93bmxvYWQgYnV0dG9uIGluIHRoZSBNZXNzYWdlcyBUYWIpICAgICAgICAgICAgfCB5ZXMgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCB5ZXMgICAgICAgICAgICAgICAgICAgfAp8IEVtYWlsIC8gRmF4IE1lc3NhZ2VzIChFbWFpbCBub3RpZmljYXRpb25zIHdpdGggbWVzc2FnZSBhdHRhY2htZW50cykgICB8IHllcyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8IG5vICAgICAgICAgICAgICAgICAgICB8CnwgQ2FsbCBSZWNvcmRpbmdzIChCdWxrIENhbGwgUmVjb3JkaW5ncyBkb3dubG9hZCBpbiBDYWxsIExvZ3MgVGFiKSAgICAgIHwgeWVzIChubyBtYXguIGRvd25sb2FkIHNpemUgbGltaXQpIHwgeWVzICAgICAgICAgICAgICAgICAgIHwKfCBDYWxsIExvZ3MgKERvd25sb2FkKSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCB5ZXMgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCB5ZXMgICAgICAgICAgICAgICAgICAgfAp8IENhbGwgTG9ncyAoRW1haWwgQ2FsbCBMb2dzIERlbGl2ZXJ5KSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8IHllcyAoMTBLIGNhbGwgbGltaXQpICAgICAgICAgICAgICB8IHllcyAoMTBLIGNhbGxzIGxpbWl0KSB8Cg==</textarea>

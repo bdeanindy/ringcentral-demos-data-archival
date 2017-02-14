@@ -35,7 +35,7 @@
 
   .step(data-title='API Resources for Data Archiving')
     :markdown
-        ## API Resources for Data Archiving
+        ## API Data Resources 
 
         We will be using a variety of RingCentral API Resources in this tutorial, and we wanted to list the primary API resources for your RingCentral Activity data:
 
@@ -45,9 +45,11 @@
 
   .step(data-title='Product Resources for Data Archiving')
     :markdown
-        ## Product Resources for Data Archving
+        ## Product Data Resources
 
-        To be thorough (even though we will not use them in this tutorial), here is a list of non-API resources to access RingCentral Activity data:
+        Sometimes developers just need data from the UI for one-off reports, or to reconcile data during initial development.
+        We will not use any of these data resources in this tutorial, but wanted to provide them for your reference to be thorough.
+        Here is a list of non-API resources to access RingCentral Activity data:
 
         * [Activity Log Overview](https://success.ringcentral.com/articles/RC_Knowledge_Article/Activity-Log-Overview)
         * [Phone System Reports](https://www.ringcentral.com/office/features/call-metrics-reporting/overview.html)
@@ -97,15 +99,152 @@
             * RC_SkipDownloadS3:
             * RC_SkipDownloadDropbox:
 
-  .step(data-title='Starting the App', data-file='README.md', data-highlight='70-75')
+  .step(data-title='Starting the Demo App', data-file='README.md', data-highlight='70-75')
     :markdown
-        ## Starting the App
+        ## Starting the Demo App
 
         To begin running this script, run `$ php index.php`.
 
-  .step(data-title='Usage - Retrieve Call Logs', data-file='README.md', data-highlight='78-86')
+  .step(data-title='Demo App - Basic Usage', data-file='README.md', data-highlight='76-122')
     :markdown
-        ## Usage - Retrieve Call Logs
+        ## Demo App - Basic Usage
 
-        TODO!!!!!!!
+        Please read the README.md sections on Basic Usage to learn how to:
+
+        * [Retrieve Call-Logs](https://github.com/bdeanindy/ringcentral-demos-data-archival/blob/master/README.md#retrieve-call-logs)
+        * [Save Call Recordings to Local File System](https://github.com/bdeanindy/ringcentral-demos-data-archival/blob/master/README.md#save-the-call-recordings-to-local-file-system)
+        * [Save Call Recordings to Amazon S3 Bucket](https://github.com/bdeanindy/ringcentral-demos-data-archival/blob/master/README.md#save-the-call-recordings-to-amazon-s3-bucket)
+        * [Save Call Recordings to DropBox](https://github.com/bdeanindy/ringcentral-demos-data-archival/blob/master/README.md#save-the-call-recordings-to-dropbox)
+
+        You can also see the [demo code for these operations](https://github.com/bdeanindy/ringcentral-demos-data-archival/tree/master/demo) for further usage examples.
+        
+  .step(data-title='index.php', data-file='index.php')
+    :markdown
+        ## Demo App - Index.php 
+
+        The [index.php](index.php) file contains code which contains references to each of the demos which actually perform the **Basic Usage** operations, let's take a look at how it is organized...
+
+  .step(data-title='Alias RingCentral PHP SDK', data-file='index.php', data-highlight='3-5')
+    :markdown
+        ## Alias RingCentral PHP SDK
+
+        After defining this as a PHP file in line 1 with `<?php` opening tag, we give aliases to namespaces of the RingCentral PHP SDK.
+
+  .step(data-title='Demo App Dependencies', data-file='composer.json', data-highlight='25-30')
+    :markdown
+        ## Demo App Dependencies
+
+        We are leveraging [Composer](https://getcomposer.org/) for dependency management in this demo application. We **require** these dependenicies using their namespace in a `composer.json` file.
+        
+        As you can see the dependencies for operating this demo app are:
+
+        * [RingCentral PHP SDK](https://github.com/ringcentral/ringcentral-php)
+        * [AWS PHP SDK](https://aws.amazon.com/sdk-for-php/)
+        * [DropBox PHP SDK](https://www.dropbox.com/developers-v1/core/sdks/php)
+        * [PHP Dotenv](https://github.com/vlucas/phpdotenv)
+
+        In production, you will likely have many more dependencies than are listed here.
+
+  .step(data-title='Load Dependencies and Set Timezone', data-file='index.php', data-highlight='8-10')
+    :markdown
+        ## Load Dependencies and Set Timezone 
+
+        A benefit of using Composer is the [Autoload feature](https://getcomposer.org/doc/01-basic-usage.md). To load the dependencies we have defined for this application in the `composer.json` file.
+
+        Next, we set the default timezone for this app to use [UTC](http://php.net/manual/en/function.date-default-timezone-set.php). We set this to **UTC** because that is the base timezone for RingCentral Call Log data (if not included as parameterized offsets).
+
+  .step(data-title='Load Environment Variables', data-file='index.php', data-highlight='13-23')
+    :markdown
+        ## Load Environment Variables 
+
+        [Dotenv]() has become an invaluable tool for developers to load environment variables during local development. Here we instantiate Dotenv and tell it the `.env` file is located within the current working directory.
+
+        Then we call the `load()` method of the Dotenv instance to load the variables contained in the `.env` file we referenced previously.
+
+        Lastly, we cache some environment variables for simplified reference later use in this file.
+
+  .step(data-title='Require Auth', data-file='index.php', data-highlight='26-27')
+    :markdown
+        ## Require Auth 
+
+        This file, then requires the `authData.php` file located in the **demo** directory. Let's take a look and see what is happening here...
+
+  .step(data-title='Authenticate to RingCentral', data-file='demo/authData.php', data-highlight='14-38')
+    :markdown
+        ## Authenticate to RingCentral with the SDK 
+
+        The beginning of `authData.php` defines this as a PHP file, defines error handling, references the RingCentral PHP SDK, and loads environment variables similar to what was done in the `index.php` file.
+
+        Beginning on line 14, we define a variable to hold a new instance of the RingCental PHP SDK, and provide it with the required parameters. Then, on line 16 we cache a reference to the RingCentral Platform object.
+
+        We will address storing and loading tokens from cache in the next step of the tutorial, but it is important to note that the **catch** portion (lines 49-59) of the `try...catch` is where we fetch a new **access_token** from the RingCentral API if we are unable to load the token from cache.
+
+  .step(data-title='Token Loading from Cache', data-file='demo/authData.php', data-highlight='14-38')
+    :markdown
+        ## Token Loading from Cache 
+
+        Lines 18-34 handle previous authentication values and loading them from cache if available.
+
+        The code sets the Platform Object's auth data to valid cached authentication data if possible, and if there is a token in cache, call the Platform Object's `refresh()` method to refresh the token ensuring we have a valid `access_token`.
+
+  .step(data-title='Downloading Call Logs', data-file='demo/callLog.php')
+    :markdown
+        ## Downloading Call Logs
+
+        Lines 30-36 of `index.php` use environment variables to determine if the code does/does not download call logs. For sake of the tutorial, we will assume **$skipCallLog === false** and has brought us into the `demo/callLog.php` file.
+
+  .step(data-title='Call Log - Long-Polling Setup', data-file='demo/callLog.php', data-highlight='20-40')
+    :markdown
+        ## Call Log - Long-Polling Setup
+
+        First some constants are configured as part of the delay logic used to long-poll all of the day's call logs.
+
+        Constants:
+
+        * pageCount - API pagination index
+        * recordCountPerPage - Call log quantity per request
+        * timePerCallLogRequest - delay in seconds between requests
+        * flag - boolean value to escape the `while` loop in next step
+
+        Next in lines 30-33, a directory is created for local storage of these call logs.
+
+        Then the time range is configured in use o the dateFrom and dateTo parameters.
+
+        Lastly we create a placeholder array which will be used later for writing the call logs to a file.
+
+  .step(data-title='Call Log API Requests', data-file='demo/callLog.php', data-highlight='50-65')
+    :markdown
+        ## Call Log API Requests 
+
+        After the code enters the **while** loop, has started the timer, and set `dateTo` and `dateFrom` parameters from environment variables, the variable `$apiResponse` is set to the result of the RingCentral Platform Object's `get()` method.
+
+        The first parameter for this is the path, in this case to call log `/account/~/extension/~/call-log`.
+
+        The second parameter is the array of query parameters we will use to filter. You can read the full list of [GET Call Log Query Parameters](https://developers.ringcentral.com/api-docs/latest/index.html#!#RefGetExtensionCallLog) in the RingCentral API Reference.
+
+        When the response is received we set the variable `$apiResponseArray` equal to the `json()` method's parsed value of the **records**. Note: the `json()` method is returned in each response using the RingCentral PHP SDK and simplifies parsing the data.
+
+        Lastly, we iterate the parsed call log records and push each record into the `$callLogs` array we defined earlier (used for writing the final file to disk).
+
+  .step(data-title='Handling Paged Data', data-file='demo/callLog.php', data-highlight='74-91')
+    :markdown
+        ## Handling Paged Data 
+
+        After we receive each page of call log data in the response from the RingCentral API, we check to see if there are any additional pages of data remaining to be fetched.
+
+        If there are additional pages, we delay the next execution of the **while** loop and bump the `$pageCount` which is used in the query parameters for the next cycle's API request.
+
+        If there are no additional pages of call log records, we write the result to the console, write the JSON file to disk, set the `$flag` as FALSE, and then unset `$callLogs` so it is clear the next time this runs.
+
+  .step(data-title='Recording Downloads', data-file='demo/callRecording.php', data-highlight='74-91')
+    :markdown
+        ## Recording Downloads 
+
+        Lines 38-45 of `index.php` use environment variables to determine if the code does/does not download call recordings. For sake of the tutorial, we will assume **$skipCallRecording === false** and has brought us into the `demo/callRecording.php` file.
+
+  .step(data-title='Recording Downloads', data-file='demo/callRecording.php', data-highlight='74-91')
+    :markdown
+        ## Recording Downloads 
+
+        Lines 38-45 of `index.php` use environment variables to determine if the code does/does not download call recordings. For sake of the tutorial, we will assume **$skipCallRecording === false** and has brought us into the `demo/callRecording.php` file.
 
