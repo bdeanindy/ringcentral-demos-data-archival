@@ -236,15 +236,29 @@
 
         If there are no additional pages of call log records, we write the result to the console, write the JSON file to disk, set the `$flag` as FALSE, and then unset `$callLogs` so it is clear the next time this runs.
 
-  .step(data-title='Recording Downloads', data-file='demo/callRecording.php', data-highlight='74-91')
+  .step(data-title='Recording Downloads', data-file='demo/callRecording.php')
     :markdown
         ## Recording Downloads 
 
         Lines 38-45 of `index.php` use environment variables to determine if the code does/does not download call recordings. For sake of the tutorial, we will assume **$skipCallRecording === false** and has brought us into the `demo/callRecording.php` file.
 
-  .step(data-title='Recording Downloads', data-file='demo/callRecording.php', data-highlight='74-91')
+  .step(data-title='Preparing to Store Recordings Locally', data-file='demo/callRecording.php', data-highlight='21-56')
     :markdown
-        ## Recording Downloads 
+        ## Preparing to Store Recordings Locally 
 
-        Lines 38-45 of `index.php` use environment variables to determine if the code does/does not download call recordings. For sake of the tutorial, we will assume **$skipCallRecording === false** and has brought us into the `demo/callRecording.php` file.
+        First some constants are setup for caching the recordingId, and defining directory and filenames we will use to store the data locally, and modifying the permission masks to make the directories and files writable.
+
+  .step(data-title='Iterating Over Call Logs for Recordings', data-file='demo/callRecording.php', data-highlight='61-78')
+    :markdown
+        ## Iterating Over Call Logs for Recordings 
+
+        Once the preparations have been completed, we iterate over the call log data to search for any call-log records which have a `recording` property.
+
+        If a `call-log.record.recording` exists, we then fetch the **contentUri** value for the recording, and use the RingCentral Platform Object's `get()` method to retrieve the binary asset which will be either `.wav` or `.mp3` encoded audio.
+
+  .step(data-title='Write Call Recording Data to Disk', data-file='demo/callRecording.php', data-highlight='83-111')
+    :markdown
+        ## Writing Call Recording Data to Disk 
+
+        Once the call recording download has been completed, write it to disk and store the call recording metadata in a `.csv` file.
 
